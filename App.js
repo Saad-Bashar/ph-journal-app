@@ -5,6 +5,7 @@ import LoginScreen from "./screens/LoginScreen";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import HomeScreen from "./screens/HomeScreen";
+import CreateScreen from "./screens/CreateScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +34,10 @@ export default function App() {
             <Stack.Screen name="Login" component={LoginScreen} />
           </>
         ) : (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Create" component={CreateScreen} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
