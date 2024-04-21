@@ -3,8 +3,8 @@ import {
   Text,
   Button,
   FlatList,
-  Touchable,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
@@ -39,6 +39,7 @@ export default function HomeScreen({ navigation }) {
         if (querySnapshot) {
           const journalsArray = querySnapshot.docs.map(documentSnapshot => ({
             text: documentSnapshot.data().text,
+            url: documentSnapshot.data().url,
             userRef: documentSnapshot.data().userRef,
             key: documentSnapshot.id,
           }));
@@ -65,6 +66,13 @@ export default function HomeScreen({ navigation }) {
         }}
       >
         <Text>{item.text}</Text>
+        {item.url && (
+          <Image
+            source={{ uri: item.url }}
+            style={{ width: 100, height: 100 }}
+            resizeMode="contain"
+          />
+        )}
 
         <View style={{ height: 20 }} />
 
