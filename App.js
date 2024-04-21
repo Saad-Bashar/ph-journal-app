@@ -14,8 +14,6 @@ export default function App() {
   const [initialising, setInitialising] = useState(true);
   const [user, setUser] = useState();
 
-  console.log(user);
-
   function onAuthStateChanged(user) {
     setUser(user);
     if (initialising) setInitialising(false);

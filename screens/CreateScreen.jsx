@@ -1,53 +1,54 @@
+import { View, Text, StyleSheet, TextInput, Button } from "react-native";
 import React, { useState } from "react";
-import { View, TextInput, Button } from "react-native";
-import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
-const CreateScreen = ({ navigation }) => {
-  const [journalText, setJournalText] = useState("");
+export default function CreateScreen({ navigation }) {
+  const [journal, setJournal] = useState("");
 
   const saveJournal = async () => {
+    // get user id
     const currentUser = auth().currentUser;
+    const uid = currentUser.uid;
 
-    if (currentUser) {
-      try {
-        const journalRef = firestore().collection("journals").doc();
-        const journalData = {
-          text: journalText,
-          userRef: currentUser.uid,
-        };
+    try {
+      // create a reference
+      const journalRef = firestore().collection("journals").doc();
+      // creating the data object
+      const journalData = {
+        text: journal,
+        userRef: uid,
+      };
 
-        await journalRef.set(journalData);
-
-        console.log("Journal saved successfully!");
-        navigation.goBack();
-        // You can add any additional logic or navigation here
-      } catch (error) {
-        console.log("Error saving journal:", error);
-      }
-    } else {
-      console.log("No user found");
+      // saving it
+      await journalRef.set(journalData);
+      navigation.goBack();
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={{ flex: 1, padding: 24 }}>
       <TextInput
-        placeholder="Enter journal text"
-        value={journalText}
-        onChangeText={text => setJournalText(text)}
-        style={{
-          height: 40,
-          borderWidth: 1,
-          borderColor: "#ddd",
-          padding: 10,
-          borderRadius: 8,
-          marginBottom: 16,
+        onChangeText={text => {
+          setJournal(text);
         }}
+        placeholder="Add your journal here"
+        style={styles.input}
       />
-      <Button title="Save Journal" onPress={saveJournal} />
+      <Button title="Add journal" onPress={saveJournal} />
     </View>
   );
-};
+}
 
-export default CreateScreen;
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+});
