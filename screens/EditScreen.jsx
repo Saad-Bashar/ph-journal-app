@@ -3,25 +3,15 @@ import React, { useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
 
-export default function CreateScreen({ navigation }) {
-  const [journal, setJournal] = useState("");
+export default function EditScreen({ route, navigation }) {
+  const { journalId, journalText } = route.params || {};
+  const [journal, setJournal] = useState(journalText);
 
-  const saveJournal = async () => {
-    // get user id
-    const currentUser = auth().currentUser;
-    const uid = currentUser.uid;
-
+  const updateJournal = async () => {
     try {
-      // create a reference
-      const journalRef = firestore().collection("journals").doc();
-      // creating the data object
-      const journalData = {
+      await firestore().collection("journals").doc(journalId).update({
         text: journal,
-        userRef: uid,
-      };
-
-      // saving it
-      await journalRef.set(journalData);
+      });
       navigation.goBack();
     } catch (err) {
       console.log(err);
@@ -36,8 +26,9 @@ export default function CreateScreen({ navigation }) {
         }}
         placeholder="Add your journal here"
         style={styles.input}
+        defaultValue={journalText}
       />
-      <Button title="Add journal" onPress={saveJournal} />
+      <Button title="Update journal" onPress={updateJournal} />
     </View>
   );
 }
